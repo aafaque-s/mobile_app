@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ようこそ友達 - Mobile Streaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Netflix-inspired font */
+        .netflix-font {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        /* Subtle animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(0, 255, 65, 0.02) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px 60px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+            padding-top: 10px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            color: #00ff41;
+            margin-bottom: 10px;
+            text-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
+            font-weight: 400;
+            letter-spacing: 3px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #00ff41;
+            opacity: 0.8;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .search-section {
+            width: 100%;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 55px 18px 20px;
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            outline: none;
+            color: #00ff41;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+
+        .search-input::placeholder {
+            color: #00ff41;
+            opacity: 0.5;
+            font-style: italic;
+        }
+
+        .search-input:focus {
+            border-color: #00ff41;
+            box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.3), 0 0 25px rgba(0, 255, 65, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.02);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .search-input:focus + .search-icon {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #00ff41;
+            stroke-width: 2;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #00ff41;
+            margin: 15px 0 15px;
+            padding-left: 10px;
+            position: relative;
+            width: 100%;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 4px;
+            background: #00ff41;
+            border-radius: 2px;
+        }
+
+        .results-container {
+            width: 100%;
+            max-height: 55vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            display: none;
+            animation: fadeInUp 0.4s ease-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .results-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .results-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .results-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 65, 0.4);
+            border-radius: 3px;
+        }
+
+        .result-item {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .result-item:hover {
+            background: rgba(0, 255, 65, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-poster {
+            width: 50px;
+            height: 75px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-title {
+            font-weight: 500;
+            color: #00ff41;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+        }
+
+        .result-meta {
+            color: #00ff41;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0.8;
+        }
+
+        .result-type {
+            text-transform: uppercase;
+            background: rgba(0, 255, 65, 0.2);
+            color: #00ff41;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .result-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .loading, .error, .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #00ff41;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            color: #ff4444;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(0, 255, 65, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff41;
+            animation: spin 1s linear infinite;
+            margin-left: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            color: #00ff41;
+            backdrop-filter: blur(20px);
+            animation: scaleIn 0.3s ease-out;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+            color: #00ff41;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .modal-subtitle {
+            color: #00ff41;
+            opacity: 0.7;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #00ff41;
+            font-size: 1.05rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff41;
+            font-size: 1rem;
+            font-family: 'Roboto', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-select:focus {
+            border-color: #00ff41;
+            box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.2), 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff41;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 65, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary {
+            background: rgba(0, 255, 65, 0.25);
+            border-color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 255, 65, 0.35);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.3);
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #00ff41;
+            margin: 15px 0;
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        /* Media Player Section */
+        .player-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 20px 0;
+            display: none;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 10px 40px rgba(0, 255, 65, 0.2);
+            position: relative;
+        }
+
+        .player-container.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .player-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .player-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #00ff41;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 85%;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+        }
+
+        .close-player {
+            background: none;
+            border: none;
+            color: #00ff41;
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            flex-shrink: 0;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .close-player:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .player-frame-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+
+        .player-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Continue Watching Section */
+        .continue-section {
+            width: 100%;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .continue-items {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 5px 20px;
+            scrollbar-width: none;
+        }
+
+        .continue-items::-webkit-scrollbar {
+            display: none;
+        }
+
+        .continue-item {
+            flex: 0 0 auto;
+            width: 140px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .continue-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 65, 0.3);
+            border-color: rgba(0, 255, 65, 0.4);
+        }
+
+        .continue-poster {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .continue-details {
+            padding: 12px;
+        }
+
+        .continue-title {
+            font-size: 0.95rem;
+            color: #00ff41;
+            font-weight: 500;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .continue-progress {
+            height: 4px;
+            background: rgba(0, 255, 65, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .continue-progress-bar {
+            height: 100%;
+            background: #00ff41;
+            width: 65%; /* Example progress */
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .continue-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(0, 255, 65, 0.7);
+            font-size: 0.8rem;
+        }
+
+        /* Android dimensions */
+        @media (max-width: 500px) {
+            .container {
+                padding: 15px 10px 50px;
+            }
+            
+            .logo {
+                font-size: 2.8rem;
+            }
+            
+            .search-input {
+                padding: 16px 50px 16px 16px;
+                font-size: 1rem;
+            }
+            
+            .result-item {
+                padding: 15px;
+                gap: 12px;
+            }
+            
+            .result-poster {
+                width: 45px;
+                height: 67px;
+            }
+            
+            .result-title {
+                font-size: 1rem;
+            }
+            
+            .result-meta {
+                font-size: 0.9rem;
+                gap: 12px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .player-title {
+                font-size: 1.1rem;
+            }
+            
+            .continue-item {
+                width: 120px;
+            }
+            
+            .continue-poster {
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo netflix-font">ようこそ友達</div>
+            <div class="tagline">discover • watch • enjoy</div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search movies and series..." id="searchInput">
+                <div class="search-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue Watching Section -->
+        <div class="continue-section" id="continueSection">
+            <h3 class="section-title netflix-font">Continue Watching</h3>
+            <div class="continue-items" id="continueItems">
+                <!-- Continue watching items will be added here -->
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+        </div>
+
+        <div class="player-container" id="playerContainer">
+            <div class="player-header">
+                <div class="player-title" id="playerTitle">Now Playing</div>
+                <button class="close-player" id="closePlayer">&times;</button>
+            </div>
+            <div class="player-frame-container">
+                <iframe class="player-frame" id="mediaPlayer" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="modal" id="seasonModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title netflix-font" id="modalTitle">Select Episode</h2>
+                    <p class="modal-subtitle" id="modalSubtitle">Choose your episode</p>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="seasonSelect">Season</label>
+                        <select class="form-select" id="seasonSelect">
+                            <option value="">Loading seasons...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="episodeSelect">Episode</label>
+                        <select class="form-select" id="episodeSelect">
+                            <option value="">Select season first</option>
+                        </select>
+                    </div>
+                    <div class="loading-text" id="loadingText" style="display: none;">Loading episodes...</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="watchSelected()">Watch Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class StreamSearch {
+            constructor() {
+                this.apiKey = 'b312a5bf89f444b2fdc45b6570fbb2c5';
+                this.searchInput = document.getElementById('searchInput');
+                this.resultsContainer = document.getElementById('resultsContainer');
+                this.playerContainer = document.getElementById('playerContainer');
+                this.mediaPlayer = document.getElementById('mediaPlayer');
+                this.playerTitle = document.getElementById('playerTitle');
+                this.closePlayer = document.getElementById('closePlayer');
+                this.continueSection = document.getElementById('continueSection');
+                this.continueItems = document.getElementById('continueItems');
+                this.currentTvShow = null;
+                this.watchingHistory = JSON.parse(localStorage.getItem('watchingHistory')) || [];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadContinueWatching();
+                
+                // Focus search input on app start
+                setTimeout(() => {
+                    this.searchInput.focus();
+                }, 500);
+            }
+
+            setupEventListeners() {
+                let searchTimeout;
+                
+                this.searchInput.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    const query = e.target.value.trim();
+                    
+                    if (query.length < 2) {
+                        this.hideResults();
+                        return;
+                    }
+                    
+                    searchTimeout = setTimeout(() => {
+                        this.performSearch(query);
+                    }, 500);
+                });
+
+                document.getElementById('seasonSelect').addEventListener('change', (e) => {
+                    const seasonNumber = e.target.value;
+                    if (seasonNumber && this.currentTvShow) {
+                        this.loadEpisodes(this.currentTvShow.id, seasonNumber);
+                    }
+                });
+
+                this.closePlayer.addEventListener('click', () => {
+                    this.closePlayerContainer();
+                });
+                
+                // Save playback progress when closing player
+                this.mediaPlayer.addEventListener('pause', () => {
+                    this.savePlaybackProgress();
+                });
+                
+                window.addEventListener('beforeunload', () => {
+                    this.savePlaybackProgress();
+                });
+            }
+
+            async performSearch(query) {
+                this.showLoading();
+                
+                try {
+                    const [movieResponse, tvResponse] = await Promise.all([
+                        fetch(`https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(query)}`),
+                        fetch(`https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&query=${encodeURIComponent(query)}`)
+                    ]);
+
+                    const movieData = await movieResponse.json();
+                    const tvData = await tvResponse.json();
+
+                    const results = [
+                        ...movieData.results.map(item => ({...item, media_type: 'movie'})),
+                        ...tvData.results.map(item => ({...item, media_type: 'tv'}))
+                    ].sort((a, b) => b.popularity - a.popularity).slice(0, 10);
+
+                    this.displayResults(results);
+                } catch (error) {
+                    this.showError('Failed to search. Please check your internet connection.');
+                    console.error('Search error:', error);
+                }
+            }
+
+            displayResults(results) {
+                if (results.length === 0) {
+                    this.showNoResults();
+                    return;
+                }
+
+                const html = results.map(item => {
+                    const title = item.title || item.name;
+                    const year = item.release_date || item.first_air_date ? 
+                        new Date(item.release_date || item.first_air_date).getFullYear() : '';
+                    const poster = item.poster_path ? 
+                        `https://image.tmdb.org/t/p/w154${item.poster_path}` : 
+                        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNzUiIHZpZXdCb3g9IjAgMCA1MCA3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9Ijc1IiBmaWxsPSJyZ2JhKDAsIDI1NSwgNjUsIDAuMSkiIHN0cm9rZT0icmdiYSgwLCAyNTUsIDY1LCAwLjMpIiByeD0iNCIvPgo8Y2lyY2xlIGN4PSIyNSIgY3k9IjM3LjUiIHI9IjgiIGZpbGw9InJnYmEoMCwgMjU1LCA2NSwgMC4zKSIvPgo8L3N2Zz4K';
+                    
+                    const rating = item.vote_average ? (item.vote_average / 2).toFixed(1) : 'N/A';
+                    
+                    const clickHandler = item.media_type === 'movie' ? 
+                        `streamSearch.watchMovie(${JSON.stringify(item).replace(/"/g, '&quot;')})` : 
+                        `streamSearch.openSeasonModal(${JSON.stringify(item).replace(/"/g, '&quot;')})`;
+                    
+                    return `
+                        <div class="result-item" onclick="${clickHandler}">
+                            <img src="${poster}" alt="${title}" class="result-poster" onerror="this.style.display='none'">
+                            <div class="result-content">
+                                <div class="result-title">${this.escapeHtml(title)}</div>
+                                <div class="result-meta">
+                                    <span class="result-type">${item.media_type}</span>
+                                    ${year ? `<span>• ${year}</span>` : ''}
+                                    <div class="result-rating">
+                                        <span>★</span>
+                                        <span>${rating}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                this.resultsContainer.innerHTML = html;
+                this.showResults();
+            }
+
+            watchMovie(movie) {
+                const url = `https://vidfast.pro/movie/${movie.id}`;
+                this.playerTitle.textContent = movie.title;
+                this.mediaPlayer.src = url;
+                this.playerContainer.classList.add('show');
+                this.scrollToPlayer();
+                
+                // Add to continue watching
+                this.addToContinueWatching({
+                    id: movie.id,
+                    title: movie.title,
+                    poster: movie.poster_path,
+                    type: 'movie',
+                    progress: 0
+                });
+            }
+
+            async openSeasonModal(tvShow) {
+                this.currentTvShow = tvShow;
+                
+                document.getElementById('modalTitle').textContent = `${tvShow.name || tvShow.title}`;
+                document.getElementById('modalSubtitle').textContent = 'Choose your episode';
+                
+                document.getElementById('seasonModal').classList.add('show');
+                
+                await this.loadSeasons(tvShow.id);
+            }
+
+            async loadSeasons(tvId) {
+                try {
+                    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${this.apiKey}`);
+                    const data = await response.json();
+                    
+                    const seasonSelect = document.getElementById('seasonSelect');
+                    const episodeSelect = document.getElementById('episodeSelect');
+                    
+                    seasonSelect.innerHTML = '<option value="">Select Season</option>';
+                    episodeSelect.innerHTML = '<option value="">Select season first</option>';
+                    
+                    data.seasons.forEach(season => {
+                        if (season.season_number > 0) {
+                            const option = document.createElement('option');
+                            option.value = season.season_number;
+                            option.textContent = `Season ${season.season_number} (${season.episode_count} episodes)`;
+                            seasonSelect.appendChild(option);
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('Error loading seasons:', error);
+                    document.getElementById('seasonSelect').innerHTML = '<option value="">Error loading seasons</option>';
+                }
+            }
+
+            async loadEpisodes(tvId, seasonNumber) {
+                const loadingText = document.getElementById('loadingText');
+                const episodeSelect = document.getElementById('episodeSelect');
+                
+                loadingText.style.display = 'block';
+                episodeSelect.innerHTML = '<option value="">Loading episodes...</option>';
+                
+                try {
+                    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${this.apiKey}`);
+                    const data = await response.json();
+                    
+                    episodeSelect.innerHTML = '<option value="">Select Episode</option>';
+                    
+                    data.episodes.forEach(episode => {
+                        const option = document.createElement('option');
+                        option.value = episode.episode_number;
+                        option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+                        episodeSelect.appendChild(option);
+                    });
+                    
+                    loadingText.style.display = 'none';
+                    
+                } catch (error) {
+                    console.error('Error loading episodes:', error);
+                    episodeSelect.innerHTML = '<option value="">Error loading episodes</option>';
+                    loadingText.style.display = 'none';
+                }
+            }
+
+            scrollToPlayer() {
+                this.playerContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            closePlayerContainer() {
+                this.playerContainer.classList.remove('show');
+                this.mediaPlayer.src = '';
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            showResults() {
+                this.resultsContainer.classList.add('show');
+            }
+
+            hideResults() {
+                this.resultsContainer.classList.remove('show');
+            }
+
+            showLoading() {
+                this.resultsContainer.innerHTML = `
+                    <div class="loading">
+                        Searching<span class="loading-spinner"></span>
+                    </div>
+                `;
+                this.showResults();
+            }
+
+            showError(message) {
+                this.resultsContainer.innerHTML = `<div class="error">${message}</div>`;
+                this.showResults();
+            }
+
+            showNoResults() {
+                this.resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div style="font-size: 18px; margin-bottom: 8px;">No results found</div>
+                        <div style="opacity: 0.7;">Try different keywords or check your spelling</div>
+                    </div>
+                `;
+                this.showResults();
+            }
+            
+            addToContinueWatching(item) {
+                // Check if item already exists
+                const existingIndex = this.watchingHistory.findIndex(i => 
+                    i.id === item.id && i.type === item.type
+                );
+                
+                if (existingIndex !== -1) {
+                    // Update existing item
+                    this.watchingHistory[existingIndex] = item;
+                } else {
+                    // Add new item
+                    this.watchingHistory.unshift(item);
+                    // Keep only last 5 items
+                    if (this.watchingHistory.length > 5) {
+                        this.watchingHistory.pop();
+                    }
+                }
+                
+                localStorage.setItem('watchingHistory', JSON.stringify(this.watchingHistory));
+                this.loadContinueWatching();
+            }
+            
+            loadContinueWatching() {
+                if (this.watchingHistory.length === 0) {
+                    this.continueSection.style.display = 'none';
+                    return;
+                }
+                
+                this.continueSection.style.display = 'block';
+                this.continueItems.innerHTML = '';
+                
+                this.watchingHistory.forEach(item => {
+                    const poster = item.poster ? 
+                        `https://image.tmdb.org/t/p/w154${item.poster}` : 
+                        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNzUiIHZpZXdCb3g9IjAgMCA1MCA3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9Ijc1IiBmaWxsPSJyZ2JhKDAsIDI1NSwgNjUsIDAuMSkiIHN0cm9rZT0icmdiYSgwLCAyNTUsIDY1LCAwLjMpIiByeD0iNCIvPgo8Y2lyY2xlIGN4PSIyNSIgY3k9IjM3LjUiIHI9IjgiIGZpbGw9InJnYmEoMCwgMjU1LCA2NSwgMC4zKSIvPgo8L3N2Zz4K';
+                    
+                    const element = document.createElement('div');
+                    element.className = 'continue-item';
+                    element.innerHTML = `
+                        <img src="${poster}" alt="${item.title}" class="continue-poster">
+                        <div class="continue-details">
+                            <div class="continue-title">${item.title}</div>
+                            <div class="continue-progress">
+                                <div class="continue-progress-bar" style="width: ${item.progress}%"></div>
+                            </div>
+                            <div class="continue-meta">
+                                <span>${item.type === 'movie' ? 'Movie' : 'TV Show'}</span>
+                                <span>${Math.round(item.progress)}%</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    element.addEventListener('click', () => {
+                        if (item.type === 'movie') {
+                            this.watchMovie({
+                                id: item.id,
+                                title: item.title,
+                                poster_path: item.poster
+                            });
+                        } else if (item.type === 'tv') {
+                            // For simplicity, we'll just play the first episode
+                            // In a real app, you would resume from where the user left off
+                            const url = `https://vidfast.pro/tv/${item.id}/1/1`;
+                            this.playerTitle.textContent = `${item.title} - S1E1`;
+                            this.mediaPlayer.src = url;
+                            this.playerContainer.classList.add('show');
+                            this.scrollToPlayer();
+                        }
+                    });
+                    
+                    this.continueItems.appendChild(element);
+                });
+            }
+            
+            savePlaybackProgress() {
+                // In a real app, you would save the current playback time
+                // For this demo, we'll simulate saving progress
+                if (this.playerTitle.textContent !== 'Now Playing') {
+                    const title = this.playerTitle.textContent;
+                    const progress = Math.floor(Math.random() * 30) + 70; // Random progress 70-99%
+                    
+                    // Find the item in history
+                    const historyItem = this.watchingHistory.find(item => 
+                        title.includes(item.title)
+                    );
+                    
+                    if (historyItem) {
+                        historyItem.progress = progress;
+                        localStorage.setItem('watchingHistory', JSON.stringify(this.watchingHistory));
+                        this.loadContinueWatching();
+                    }
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('seasonModal').classList.remove('show');
+        }
+
+        function watchSelected() {
+            const seasonSelect = document.getElementById('seasonSelect');
+            const episodeSelect = document.getElementById('episodeSelect');
+            
+            const season = seasonSelect.value;
+            const episode = episodeSelect.value;
+            
+            if (!season || !episode) {
+                alert('Please select both season and episode');
+                return;
+            }
+            
+            if (streamSearch.currentTvShow) {
+                const url = `https://vidfast.pro/tv/${streamSearch.currentTvShow.id}/${season}/${episode}`;
+                streamSearch.playerTitle.textContent = `${streamSearch.currentTvShow.name || streamSearch.currentTvShow.title} - S${season}E${episode}`;
+                streamSearch.mediaPlayer.src = url;
+                streamSearch.playerContainer.classList.add('show');
+                streamSearch.scrollToPlayer();
+                closeModal();
+                
+                // Add to continue watching
+                streamSearch.addToContinueWatching({
+                    id: streamSearch.currentTvShow.id,
+                    title: streamSearch.currentTvShow.name || streamSearch.currentTvShow.title,
+                    poster: streamSearch.currentTvShow.poster_path,
+                    type: 'tv',
+                    season: season,
+                    episode: episode,
+                    progress: 0
+                });
+            }
+        }
+
+        let streamSearch;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            streamSearch = new StreamSearch();
+        });
+    </script>
+</body>
+</html>
