@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ようこそ友達 - Mobile Streaming</title>
+    <title>StreamFlix - Mobile Streaming App</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -22,14 +22,12 @@
             position: relative;
         }
 
-        /* Netflix-inspired font */
         .netflix-font {
             font-family: 'Bebas Neue', sans-serif;
             letter-spacing: 1px;
             font-weight: 400;
         }
 
-        /* Subtle animated background */
         body::before {
             content: '';
             position: fixed;
@@ -56,7 +54,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 15px 60px;
+            padding: 20px 15px 30px;
             max-width: 500px;
             margin: 0 auto;
         }
@@ -80,7 +78,7 @@
         }
 
         .logo {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             color: #00ff41;
             margin-bottom: 10px;
             text-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
@@ -109,7 +107,7 @@
 
         .search-input {
             width: 100%;
-            padding: 18px 55px 18px 20px;
+            padding: 16px 55px 16px 20px;
             border: 1px solid rgba(0, 255, 65, 0.4);
             border-radius: 15px;
             font-size: 1.1rem;
@@ -156,28 +154,6 @@
             height: 100%;
             stroke: #00ff41;
             stroke-width: 2;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            color: #00ff41;
-            margin: 15px 0 15px;
-            padding-left: 10px;
-            position: relative;
-            width: 100%;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-        }
-
-        .section-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 70%;
-            width: 4px;
-            background: #00ff41;
-            border-radius: 2px;
         }
 
         .results-container {
@@ -547,91 +523,10 @@
             border: none;
         }
 
-        /* Continue Watching Section */
-        .continue-section {
-            width: 100%;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .continue-items {
-            display: flex;
-            overflow-x: auto;
-            gap: 15px;
-            padding: 10px 5px 20px;
-            scrollbar-width: none;
-        }
-
-        .continue-items::-webkit-scrollbar {
-            display: none;
-        }
-
-        .continue-item {
-            flex: 0 0 auto;
-            width: 140px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .continue-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 255, 65, 0.3);
-            border-color: rgba(0, 255, 65, 0.4);
-        }
-
-        .continue-poster {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .continue-details {
-            padding: 12px;
-        }
-
-        .continue-title {
-            font-size: 0.95rem;
-            color: #00ff41;
-            font-weight: 500;
-            margin-bottom: 5px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .continue-progress {
-            height: 4px;
-            background: rgba(0, 255, 65, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .continue-progress-bar {
-            height: 100%;
-            background: #00ff41;
-            width: 65%; /* Example progress */
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
-        }
-
-        .continue-meta {
-            display: flex;
-            justify-content: space-between;
-            color: rgba(0, 255, 65, 0.7);
-            font-size: 0.8rem;
-        }
-
         /* Android dimensions */
         @media (max-width: 500px) {
             .container {
-                padding: 15px 10px 50px;
+                padding: 15px 10px 30px;
             }
             
             .logo {
@@ -674,21 +569,13 @@
             .player-title {
                 font-size: 1.1rem;
             }
-            
-            .continue-item {
-                width: 120px;
-            }
-            
-            .continue-poster {
-                height: 160px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo netflix-font">ようこそ友達</div>
+            <div class="logo netflix-font">StreamFlix</div>
             <div class="tagline">discover • watch • enjoy</div>
         </div>
 
@@ -700,14 +587,6 @@
                         <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-            </div>
-        </div>
-
-        <!-- Continue Watching Section -->
-        <div class="continue-section" id="continueSection">
-            <h3 class="section-title netflix-font">Continue Watching</h3>
-            <div class="continue-items" id="continueItems">
-                <!-- Continue watching items will be added here -->
             </div>
         </div>
 
@@ -763,17 +642,13 @@
                 this.mediaPlayer = document.getElementById('mediaPlayer');
                 this.playerTitle = document.getElementById('playerTitle');
                 this.closePlayer = document.getElementById('closePlayer');
-                this.continueSection = document.getElementById('continueSection');
-                this.continueItems = document.getElementById('continueItems');
                 this.currentTvShow = null;
-                this.watchingHistory = JSON.parse(localStorage.getItem('watchingHistory')) || [];
                 
                 this.init();
             }
 
             init() {
                 this.setupEventListeners();
-                this.loadContinueWatching();
                 
                 // Focus search input on app start
                 setTimeout(() => {
@@ -807,15 +682,6 @@
 
                 this.closePlayer.addEventListener('click', () => {
                     this.closePlayerContainer();
-                });
-                
-                // Save playback progress when closing player
-                this.mediaPlayer.addEventListener('pause', () => {
-                    this.savePlaybackProgress();
-                });
-                
-                window.addEventListener('beforeunload', () => {
-                    this.savePlaybackProgress();
                 });
             }
 
@@ -891,15 +757,6 @@
                 this.mediaPlayer.src = url;
                 this.playerContainer.classList.add('show');
                 this.scrollToPlayer();
-                
-                // Add to continue watching
-                this.addToContinueWatching({
-                    id: movie.id,
-                    title: movie.title,
-                    poster: movie.poster_path,
-                    type: 'movie',
-                    progress: 0
-                });
             }
 
             async openSeasonModal(tvShow) {
@@ -1014,100 +871,6 @@
                 `;
                 this.showResults();
             }
-            
-            addToContinueWatching(item) {
-                // Check if item already exists
-                const existingIndex = this.watchingHistory.findIndex(i => 
-                    i.id === item.id && i.type === item.type
-                );
-                
-                if (existingIndex !== -1) {
-                    // Update existing item
-                    this.watchingHistory[existingIndex] = item;
-                } else {
-                    // Add new item
-                    this.watchingHistory.unshift(item);
-                    // Keep only last 5 items
-                    if (this.watchingHistory.length > 5) {
-                        this.watchingHistory.pop();
-                    }
-                }
-                
-                localStorage.setItem('watchingHistory', JSON.stringify(this.watchingHistory));
-                this.loadContinueWatching();
-            }
-            
-            loadContinueWatching() {
-                if (this.watchingHistory.length === 0) {
-                    this.continueSection.style.display = 'none';
-                    return;
-                }
-                
-                this.continueSection.style.display = 'block';
-                this.continueItems.innerHTML = '';
-                
-                this.watchingHistory.forEach(item => {
-                    const poster = item.poster ? 
-                        `https://image.tmdb.org/t/p/w154${item.poster}` : 
-                        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNzUiIHZpZXdCb3g9IjAgMCA1MCA3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9Ijc1IiBmaWxsPSJyZ2JhKDAsIDI1NSwgNjUsIDAuMSkiIHN0cm9rZT0icmdiYSgwLCAyNTUsIDY1LCAwLjMpIiByeD0iNCIvPgo8Y2lyY2xlIGN4PSIyNSIgY3k9IjM3LjUiIHI9IjgiIGZpbGw9InJnYmEoMCwgMjU1LCA2NSwgMC4zKSIvPgo8L3N2Zz4K';
-                    
-                    const element = document.createElement('div');
-                    element.className = 'continue-item';
-                    element.innerHTML = `
-                        <img src="${poster}" alt="${item.title}" class="continue-poster">
-                        <div class="continue-details">
-                            <div class="continue-title">${item.title}</div>
-                            <div class="continue-progress">
-                                <div class="continue-progress-bar" style="width: ${item.progress}%"></div>
-                            </div>
-                            <div class="continue-meta">
-                                <span>${item.type === 'movie' ? 'Movie' : 'TV Show'}</span>
-                                <span>${Math.round(item.progress)}%</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    element.addEventListener('click', () => {
-                        if (item.type === 'movie') {
-                            this.watchMovie({
-                                id: item.id,
-                                title: item.title,
-                                poster_path: item.poster
-                            });
-                        } else if (item.type === 'tv') {
-                            // For simplicity, we'll just play the first episode
-                            // In a real app, you would resume from where the user left off
-                            const url = `https://vidfast.pro/tv/${item.id}/1/1`;
-                            this.playerTitle.textContent = `${item.title} - S1E1`;
-                            this.mediaPlayer.src = url;
-                            this.playerContainer.classList.add('show');
-                            this.scrollToPlayer();
-                        }
-                    });
-                    
-                    this.continueItems.appendChild(element);
-                });
-            }
-            
-            savePlaybackProgress() {
-                // In a real app, you would save the current playback time
-                // For this demo, we'll simulate saving progress
-                if (this.playerTitle.textContent !== 'Now Playing') {
-                    const title = this.playerTitle.textContent;
-                    const progress = Math.floor(Math.random() * 30) + 70; // Random progress 70-99%
-                    
-                    // Find the item in history
-                    const historyItem = this.watchingHistory.find(item => 
-                        title.includes(item.title)
-                    );
-                    
-                    if (historyItem) {
-                        historyItem.progress = progress;
-                        localStorage.setItem('watchingHistory', JSON.stringify(this.watchingHistory));
-                        this.loadContinueWatching();
-                    }
-                }
-            }
         }
 
         function closeModal() {
@@ -1133,17 +896,6 @@
                 streamSearch.playerContainer.classList.add('show');
                 streamSearch.scrollToPlayer();
                 closeModal();
-                
-                // Add to continue watching
-                streamSearch.addToContinueWatching({
-                    id: streamSearch.currentTvShow.id,
-                    title: streamSearch.currentTvShow.name || streamSearch.currentTvShow.title,
-                    poster: streamSearch.currentTvShow.poster_path,
-                    type: 'tv',
-                    season: season,
-                    episode: episode,
-                    progress: 0
-                });
             }
         }
 
